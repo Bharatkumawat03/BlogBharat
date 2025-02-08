@@ -20,8 +20,10 @@ app.use(cookieParser());
 app.use(express.json());
 
 const authRouter = require('./routes/auth');
+const blogRouter = require('./routes/blog');
 
 app.use("/", authRouter);
+app.use("/", blogRouter);
 
 connectDB()
 .then(() => {
