@@ -1,8 +1,9 @@
-const express = require('express');
+import express from 'express';
+import User from '../models/user.js';
+import bcrypt from 'bcrypt';
+import { validateSignUpData } from '../utils/validation.js';
+
 const authRouter = express.Router();
-const User = require('../models/user');
-const bcrypt = require("bcrypt");
-const {validateSignUpData} = require("../utils/validation");
 
 authRouter.post("/signup", async (req,res) => {
     try {
@@ -52,7 +53,8 @@ authRouter.post("/login", async (req, res) => {
                 secure: true,
                 sameSite: "None",
             })
-            res.status(200).json({ message: "Login successful", user, token });
+            // res.status(200).json({ message: "Login successful", user, token });
+            res.send(user);
         } else {
             return res.status(401).json({message: "Invalid Password"});
         }
@@ -75,4 +77,4 @@ authRouter.post("/logout", async (req, res) => {
     }
 })
 
-module.exports = authRouter;
+export default authRouter;

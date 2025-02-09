@@ -1,4 +1,4 @@
-const validator = require('validator');
+import validator from 'validator';
 
 const validateSignUpData = (req) =>{
     const {firstName, lastName, email, password} = req.body;
@@ -12,4 +12,8 @@ const validateSignUpData = (req) =>{
     }
 };
 
-module.exports = {validateSignUpData};
+const validateEditProfileData = (req) => {
+
+}
+
+export { validateSignUpData };

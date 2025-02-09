@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
-const validator = require("validator");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+import mongoose from "mongoose";
+import validator from "validator";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema(
   {
@@ -44,6 +44,13 @@ const userSchema = new mongoose.Schema(
         }
       },
     },
+    photoUrl: {
+      type: String,
+      default: "https://geographyandyou.com/images/user-profile.png",
+    },
+    about: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
@@ -63,4 +70,4 @@ userSchema.methods.validatePassword = async function (passwordInputByUser) {
 };
 
 const User = mongoose.model("User", userSchema);
-module.exports = User;
+export default User;

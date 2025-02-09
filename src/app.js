@@ -1,10 +1,11 @@
-const express = require('express');
-const cookieParser = require('cookie-parser');
-const cors = require('cors');
-const connectDB = require('./config/db');
+import express from "express";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import connectDB from "./config/db.js";
+import connectCloudinary from "./config/cloudinary.js";
 
-
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 const app = express();
 
 app.use(
@@ -19,11 +20,13 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 
-const authRouter = require('./routes/auth');
-const blogRouter = require('./routes/blog');
+import authRouter from './routes/auth.js';
+import blogRouter from './routes/blog.js';
+import profileRouter from './routes/profile.js';
 
 app.use("/", authRouter);
 app.use("/", blogRouter);
+app.use("/", profileRouter);
 
 connectDB()
 .then(() => {
@@ -31,6 +34,7 @@ connectDB()
         res.send("API WORKING");
     });
     console.log("Database connected");
+    connectCloudinary();
     app.listen(process.env.PORT, () => {
         console.log(`Server is running on port ${process.env.PORT}`);
     })
