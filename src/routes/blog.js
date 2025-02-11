@@ -41,14 +41,36 @@ blogRouter.post(
 
 blogRouter.get("/blog/all", async (req, res) => {
   try {
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 12 } = req.query;
     const blogs = await Blog.find()
-      .populate("author", "name")
+      .populate("author", "firstName lastName")
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(Number(limit));
 
-    res.status(200).json(blogs);
+      const totalBlogs = await Blog.countDocuments();
+      const totalPages = Math.ceil(totalBlogs / limit);
+
+    res.status(200).json({blogs, totalPages});
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+blogRouter.get("/blog/myblog", userAuth, async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { page = 1, limit = 12 } = req.query;
+    const myblogs = await Blog.findById(userId)
+      .populate("author", "firstName lastName")
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
+
+      const totalMyBlogs = await Blog.findById(userId).countDocuments();
+      const totalMyPages = Math.ceil(totalMyBlogs / limit);
+
+    res.status(200).json({myblogs, totalMyPages});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -57,7 +79,7 @@ blogRouter.get("/blog/all", async (req, res) => {
 blogRouter.get("/blog/:id", async (req, res) => {
   try {
     const blogId = req.params.id;
-    const blog = await Blog.findById(blogId).populate("author", "name");
+    const blog = await Blog.findById(blogId).populate("author", "firstName lastName");
     if (!blog) return res.status(404).json({ message: "Blog not found" });
     res.status(200).json(blog);
   } catch (error) {

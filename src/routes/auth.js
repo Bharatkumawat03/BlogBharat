@@ -53,8 +53,8 @@ authRouter.post("/login", async (req, res) => {
                 secure: true,
                 sameSite: "None",
             })
-            // res.status(200).json({ message: "Login successful", user, token });
-            res.send(user);
+            res.status(200).json({ message: "Login successful", data: user });
+            // res.send(user);
         } else {
             return res.status(401).json({message: "Invalid Password"});
         }
