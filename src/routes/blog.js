@@ -1,6 +1,6 @@
 import express from "express";
 import { userAuth } from "../middleware/auth.js";
-import Blog from "../models/Blog.js";
+import Blog from "../models/blog.js";
 import { v2 as cloudinary } from "cloudinary";
 import upload from "../middleware/multer.js";
 
@@ -52,25 +52,6 @@ blogRouter.get("/blog/all", async (req, res) => {
       const totalPages = Math.ceil(totalBlogs / limit);
 
     res.status(200).json({blogs, totalPages});
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-blogRouter.get("/blog/myblog", userAuth, async (req, res) => {
-  try {
-    const userId = req.user._id;
-    const { page = 1, limit = 12 } = req.query;
-    const myblogs = await Blog.findById(userId)
-      .populate("author", "firstName lastName")
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(Number(limit));
-
-      const totalMyBlogs = await Blog.findById(userId).countDocuments();
-      const totalMyPages = Math.ceil(totalMyBlogs / limit);
-
-    res.status(200).json({myblogs, totalMyPages});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
